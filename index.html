@@ -1,163 +1,110 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>402 Payment Required</title>
-    <style>
-      :root {
-        color-scheme: light dark;
-      }
-      body {
-        margin: 0;
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-        background: #000;
-        font-family: Georgia, "Times New Roman", Times, serif;
-        color: #fff;
-      }
-      .poster {
-        width: min(900px, 92vw);
-        background: #000;
-        text-align: center;
-        border: 10px solid #000;
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-      }
-      .poster .image-frame {
-        margin: 18px;
-        border: 8px solid #fff;
-        background: #000;
-      }
-      .poster img {
-        display: block;
-        width: 100%;
-        height: auto;
-      }
-      .caption {
-        padding: 18px 0 26px;
-      }
-      .caption .code {
-        font-size: clamp(56px, 9vw, 120px);
-        line-height: 1;
-        font-weight: 500;
-        margin: 0;
-      }
-      .caption .text {
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: clamp(16px, 3vw, 28px);
-        margin: 8px 0 0;
-        opacity: 0.95;
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>402 Cat</title>
+  <meta name="description" content="402 Cat. Payment Required." />
+  <link rel="icon" type="image/png" href="./favicon.png" />
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #000;
+      font-family: Georgia, "Times New Roman", Times, serif;
+      color: #fff;
+    }
+    .poster {
+      width: min(900px, 92vw);
+      background: #000;
+      text-align: center;
+      border: 10px solid #000;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    }
+    .poster .image-frame { margin: 18px; border: 8px solid #fff; background: #000; }
+    .poster img { display: block; width: 100%; height: auto; }
+    .caption { padding: 18px 0 26px; }
+    .caption .code { font-size: clamp(56px, 9vw, 120px); line-height: 1; font-weight: 700; margin: 0; }
+    .caption .text { font-size: clamp(16px, 3vw, 28px); margin: 8px 0 0; opacity: 0.95; }
+
+    .contract-box {
+      width: min(900px, 92vw);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 6px 0 24px;
+      padding: 14px 16px;
+      background: #111;
+      border: 1px solid #444;
+      border-radius: 8px;
+    }
+    .contract-label { font-weight: 700; }
+    .contract-value { flex: 1; word-break: break-all; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+    .copy-btn {
+      appearance: none;
+      background: #fff;
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .copy-btn:hover { background: #e6e6e6; }
+    .copy-status { font-size: 12px; color: #9ef59e; opacity: 0; transition: opacity .2s ease; }
+    .copy-status.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  <main class="poster" role="main" aria-labelledby="title">
+    <div class="image-frame">
+      <img src="./402cat.jpg" alt="402 cat with money" />
+    </div>
+    <div class="caption">
+      <h1 id="title" class="code">402</h1>
+      <p class="text">Payment Required</p>
+    </div>
+  </main>
+
+  <section class="contract-box" aria-live="polite">
+    <span class="contract-label">Contract Address:</span>
+    <span id="contract-value" class="contract-value">ycDxV6PEo3pXWo46Ajuk3NwUHjcU6d6DBKLn481pump</span>
+    <button id="copy-btn" class="copy-btn" type="button" aria-label="Copy contract address">Copy</button>
+    <span id="copy-status" class="copy-status"></span>
+  </section>
+
+  <script>
+    (function() {
+      const valueEl = document.getElementById('contract-value');
+      const copyBtn = document.getElementById('copy-btn');
+      const statusEl = document.getElementById('copy-status');
+      const text = valueEl.textContent.trim();
+
+      function showStatus(msg) {
+        statusEl.textContent = msg;
+        statusEl.classList.add('show');
+        setTimeout(() => { statusEl.classList.remove('show'); statusEl.textContent = ''; }, 1400);
       }
 
-      .contract-box {
-        width: min(900px, 92vw);
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin: 6px 0 24px;
-        padding: 14px 16px;
-        background: #111;
-        border: 1px solid #444;
-        border-radius: 8px;
-      }
-      .contract-label {
-        font-weight: 700;
-      }
-      .contract-value {
-        flex: 1;
-        word-break: break-all;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas,
-          "Liberation Mono", monospace;
-      }
-      .copy-btn {
-        appearance: none;
-        background: #fff;
-        color: #000;
-        border: none;
-        border-radius: 6px;
-        padding: 8px 12px;
-        font-weight: 700;
-        cursor: pointer;
-      }
-      .copy-btn:hover {
-        background: #e6e6e6;
-      }
-      .copy-status {
-        font-size: 12px;
-        color: #9ef59e;
-        opacity: 0;
-        transition: opacity 0.2s ease;
-      }
-      .copy-status.show {
-        opacity: 1;
-      }
-    </style>
-  </head>
-  <body>
-    <main class="poster" role="main" aria-labelledby="title">
-      <div class="image-frame">
-        <img src="./402cat.jpg" alt="402 cat with money" />
-      </div>
-      <div class="caption">
-        <h1 id="title" class="code">402</h1>
-        <p class="text">Payment Required</p>
-      </div>
-    </main>
-
-    <section class="contract-box" aria-live="polite">
-      <span class="contract-label">Contract Address:</span>
-      <span id="contract-value" class="contract-value"
-        >ycDxV6PEo3pXWo46Ajuk3NwUHjcU6d6DBKLn481pump</span
-      >
-      <button
-        id="copy-btn"
-        class="copy-btn"
-        type="button"
-        aria-label="Copy contract address"
-      >
-        Copy
-      </button>
-      <span id="copy-status" class="copy-status"></span>
-    </section>
-
-    <script>
-      (function () {
-        const valueEl = document.getElementById("contract-value");
-        const copyBtn = document.getElementById("copy-btn");
-        const statusEl = document.getElementById("copy-status");
-        const text = valueEl.textContent.trim();
-
-        function showStatus(msg) {
-          statusEl.textContent = msg;
-          statusEl.classList.add("show");
-          setTimeout(() => {
-            statusEl.classList.remove("show");
-            statusEl.textContent = "";
-          }, 1400);
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+          showStatus('Copied!');
+        } catch (err) {
+          // Fallback for older browsers
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); showStatus('Copied!'); }
+          catch(e) { showStatus('Unable to copy'); }
+          finally { document.body.removeChild(ta); }
         }
-
-        copyBtn.addEventListener("click", async () => {
-          try {
-            await navigator.clipboard.writeText(text);
-            showStatus("Copied!");
-          } catch (err) {
-            // Fallback for older browsers
-            const ta = document.createElement("textarea");
-            ta.value = text;
-            document.body.appendChild(ta);
-            ta.select();
-            try {
-              document.execCommand("copy");
-              showStatus("Copied!");
-            } catch (e) {
-              showStatus("Unable to copy");
-            } finally {
-              document.body.removeChild(ta);
-            }
-          }
-        });
-      })();
-    </script>
-  </body>
+      });
+    })();
+  </script>
+</body>
 </html>
